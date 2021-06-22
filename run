@@ -55,3 +55,10 @@ sudo pacman -S yay snap --noconfirm
 yay -Syyua --noconfirm
 
 
+color_print "Install 'code' programs " _ "cyan"
+CODE="pycharm-community pycharm-professional"
+
+for item in $CODE; do
+  sudo pacman -S item --noconfirm
+done
+
