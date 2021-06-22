@@ -1,14 +1,57 @@
 #!/bin/bash
 
-red=`tput setaf 1`
-green=`tput setaf 2`
-yellow=`tput setaf 3`
-reset=`tput sgr0`
+color_print(){
+  <<DESCRIPTION
+  Function to print colored messages in terminal using 'echo' and 'tput'
 
-echo "${yellow}Install 'yay' & Update current system${reset}"
+  If the there is no argument after command - nothing will be printed.
+  If there is a mistake in a color name or there is no such color
+  this option (font or background) will be ignored.
 
-sudo pacman -S yay pamac --noconfirm
+  Args:
+    $1: string is a message to print
+    $2: string is a color for message font
+    $3: string is a color for message background
+  Examples:
+  $ color_print 'Message' 'yellow' 'red'
+  >  Message
+DESCRIPTION
+
+  font_option="setaf"
+  background_option="setab"
+  declare -A colors=( ["red"]="1" ["green"]=2 ["yellow"]=3 ["blue"]=4 ["magenta"]=5 ["cyan"]=6 ["white"]=7)
+
+  reset=$(tput sgr0)
+
+  # If there is no ($1) argument, function is over
+  if [[ -z $1 ]]; then
+    return 1
+  fi
+
+  # Check ($2) argument to add command for font option, otherwise it's empty
+  font=""
+  if [[ -n $2 ]] && [[ ${!colors[*]} =~ $2 ]];
+  then
+    font="$(tput "${font_option}" "${colors[$2]}")"
+  fi
+
+  # Check ($3) argument to add command for background option, otherwise it's empty
+  background=""
+  if [[ -n $3 ]] && [[ ${!colors[*]} =~ $3 ]];
+  then
+    background="$(tput "${background_option}" "${colors[$3]}")"
+  fi
+
+  # Combine the final message command
+  echo ">${font} ${background} $1 ${reset}"
+  return 0
+}
+
+color_print "Update current system" _ "cyan"
 sudo pacman -Syyu --noconfirm
+
+color_print "Install 'yay' & 'snap'" _ "cyan"
+sudo pacman -S yay snap --noconfirm
 yay -Syyua --noconfirm
 
 
