@@ -56,9 +56,17 @@ yay -Syyua --noconfirm
 
 
 color_print "Install 'code' programs " _ "cyan"
-CODE="pycharm-community pycharm-professional"
+CODE="pycharm-community-edition vim wine lazygit virtualbox virtualbox-ext-vnc virtualbox-guest-iso"
+MEDIA="telegram-desktop spotifyd krita obs-stusio"
+WEB="brave torbrowser-launcher firefox"
+echo $CODE $MEDIA
+for item in $CODE $MEDIA $WEB; do
+  color_print "Installing package: $item" "blue" "yellow"
+  sudo pacman -S $item --noconfirm
+done
 
+CODE="pycharm-professional-edition"
 for item in $CODE; do
-  sudo pacman -S item --noconfirm
+  yay -S --noconfirm $item
 done
 
